@@ -25,13 +25,13 @@ checkPalindrome('Лёша на полке клопа нашёл ');
 const getNumber = (string) => {
   let number = '';
   for(let i = 0; i < string.length; i++) {
-    if(Number.isNaN(parseInt(string[i]))) {
+    if(Number.isNaN(parseInt(string[i], 10))) {
       number += '';
     } else {
       number += string[i];
     }
   }
-  return parseInt(number);
+  return parseInt(number, 10);
 };
 
 getNumber('Коля 230 и -1 годик');
