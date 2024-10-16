@@ -1,35 +1,3 @@
-
-// let object1 = {
-// id: 1,
-// url: "photos/1.jpg",
-// description: "Красивое фото",
-// likes: 15, // случайное число от 15 до 200
-// comments: [{
-// id: 135,
-// avatar: "img/avatar-6.svg", // случайная фотография от 1 до 6
-// message: "Всё отлично!", // 1 или 2 случайных сообщения
-// name: "Коля", // случайное имя из списка
-// }], // комментарии пользователей от 0 до 30
-// };
-
-// Функция для генерации объектов
-// let generateObject = function () {
-//   const arr = [];
-//   const description = ['Крутое фото', 'Классное фото', 'Удачное фото'];
-//   for (let i = 0; i < 25; i++) {
-//     const object = {
-//       id: i + 1,
-//       url: `photos/${i + 1}.jpg`,
-//       description: description[i],
-//       // description: `Описание - ${i + 1}`,
-//       // likes: generateLikes(),
-//       // comments: generateComments(),
-//     };
-//     arr.push(object);
-//   }
-//   return arr;
-// };
-
 const DESCRIPTIONS = [
   'Рассвет над морем',
   'Уютный вечер у камина',
