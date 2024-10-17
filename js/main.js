@@ -1,3 +1,13 @@
+const MIN_LIKES = 15;
+
+const MAX_LIKES = 200;
+
+const MAX_COMMENTS = 30;
+
+const MIN_AVATAR_NUMBER = 1;
+
+const MAX_AVATAR_NUMBER = 6;
+
 const DESCRIPTIONS = [
   'Рассвет над морем',
   'Уютный вечер у камина',
@@ -33,12 +43,24 @@ const NAMES = [
   'Григорий',
 ];
 
-const getRandomInt = (min, max) => (Math.ceil(Math.random() * (max - min) + min));
+const getRandomInt = (min, max) => Math.ceil(Math.random() * (max - min) + min);
 
-const createComment = (id) => ({id: id, avatar: `img/avatar${getRandomInt(1, 6)}.svg`, message: MESSAGES[getRandomInt(0, MESSAGES.length)], name: NAMES[getRandomInt(0, NAMES.length)]}); // Генерация комментария
+const createComment = (id) => ({
+  id: id,
+  avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
+  message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
+  name: NAMES[getRandomInt(0, NAMES.length - 1)],
+});
 
-const getPhoto = (id) => ({id: id, url: `photos/${id}.jpg`, description: DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length)], likes: getRandomInt(15, 200), comments: Array.from({length: getRandomInt(0, 30)}, createComment(id))}); // Генерация объекта
+const createPhoto = (id) => ({
+  id: id,
+  url: `photos/${id}.jpg`,
+  description: DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length - 1)],
+  likes: getRandomInt(MIN_LIKES, MAX_LIKES),
+  comments: Array.from({ length: getRandomInt(0, MAX_COMMENTS) }, (_, index) => createComment(id + index)),
+});
 
-const getPhotoArray = (arrayLength) => (Array.from({length: arrayLength}, getPhoto)); // Добавление объектов описывающих фотографию в массив
+const createGallery = (length) =>
+  Array.from({ length }, (_, index) => createPhoto(index + 1));
 
-getPhotoArray(25);
+createGallery(25);
