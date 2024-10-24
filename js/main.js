@@ -1,11 +1,7 @@
 const MIN_LIKES = 15;
-
 const MAX_LIKES = 200;
-
 const MAX_COMMENTS = 30;
-
 const MIN_AVATAR_NUMBER = 1;
-
 const MAX_AVATAR_NUMBER = 6;
 
 const DESCRIPTIONS = [
@@ -43,7 +39,13 @@ const NAMES = [
   'Григорий',
 ];
 
-const getRandomInt = (min, max) => Math.ceil(Math.random() * (max - min) + min);
+const getRandomInt = (min, max) => {
+  const lowerNumber = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
+  const upperNumber = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
+  const resultNumber = Math.floor(Math.random() * (upperNumber - lowerNumber + 1) + lowerNumber);
+
+  return resultNumber;
+};
 
 const createComment = (id) => ({
   id: id,
