@@ -48,14 +48,14 @@ const getRandomInt = (min, max) => {
 };
 
 const createComment = (id) => ({
-  id: id,
+  id,
   avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
   message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
   name: NAMES[getRandomInt(0, NAMES.length - 1)],
 });
 
 const createPhoto = (id) => ({
-  id: id,
+  id,
   url: `photos/${id}.jpg`,
   description: DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length - 1)],
   likes: getRandomInt(MIN_LIKES, MAX_LIKES),
