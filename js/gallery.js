@@ -65,4 +65,31 @@ const createPhoto = (id) => ({
 const createGallery = (length) =>
   Array.from({ length }, (_, index) => createPhoto(index + 1));
 
-createGallery(25);
+const picturesElement = document.querySelector('.pictures');
+const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+const generatePhotoElement = (filledPhoto) => {
+  const photoElement = picturesTemplate.cloneNode(true);
+  const imageElement = photoElement.querySelector('.picture__img');
+
+  imageElement.src = filledPhoto.url;
+  imageElement.alt = filledPhoto.description;
+  photoElement.querySelector('.picture__likes').textContent = filledPhoto.likes;
+  photoElement.querySelector('.picture__comments').textContent = filledPhoto.comments.length;
+
+  return photoElement;
+};
+
+const renderGallery = (galleryPhoto) => {
+  const picturePhotoFragment = document.createDocumentFragment();
+
+  galleryPhoto.forEach((filledPhoto) => {
+    const photoElement = generatePhotoElement(filledPhoto);
+
+    picturePhotoFragment.appendChild(photoElement);
+  });
+
+  picturesElement.appendChild(picturePhotoFragment);
+};
+
+renderGallery(createGallery(25));
