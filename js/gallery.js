@@ -1,3 +1,5 @@
+import { openModal } from './fullphoto';
+
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MAX_COMMENTS = 30;
@@ -86,10 +88,16 @@ const renderGallery = (galleryPhoto) => {
   galleryPhoto.forEach((filledPhoto) => {
     const photoElement = generatePhotoElement(filledPhoto);
 
+    photoElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openModal(filledPhoto);
+    });
+
     picturePhotoFragment.appendChild(photoElement);
   });
 
   picturesElement.appendChild(picturePhotoFragment);
+
 };
 
 renderGallery(createGallery(25));
