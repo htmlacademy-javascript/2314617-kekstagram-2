@@ -51,7 +51,7 @@ const getRandomInt = (min, max) => {
 
 const createComment = (id) => ({
   id,
-  avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
+  avatar: `img/avatar-${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
   message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
   name: NAMES[getRandomInt(0, NAMES.length - 1)],
 });
