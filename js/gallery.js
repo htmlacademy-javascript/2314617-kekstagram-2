@@ -1,3 +1,5 @@
+import { openModal } from './fullphoto';
+
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MAX_COMMENTS = 30;
@@ -49,7 +51,7 @@ const getRandomInt = (min, max) => {
 
 const createComment = (id) => ({
   id,
-  avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
+  avatar: `img/avatar-${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
   message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
   name: NAMES[getRandomInt(0, NAMES.length - 1)],
 });
@@ -70,8 +72,10 @@ const picturesTemplate = document.querySelector('#picture').content.querySelecto
 
 const generatePhotoElement = (filledPhoto) => {
   const photoElement = picturesTemplate.cloneNode(true);
+
   const imageElement = photoElement.querySelector('.picture__img');
 
+  photoElement.dataset.photoId = filledPhoto.id;
   imageElement.src = filledPhoto.url;
   imageElement.alt = filledPhoto.description;
   photoElement.querySelector('.picture__likes').textContent = filledPhoto.likes;
@@ -92,4 +96,19 @@ const renderGallery = (galleryPhoto) => {
   picturesElement.appendChild(picturePhotoFragment);
 };
 
-renderGallery(createGallery(25));
+const arrayPhoto = createGallery(25);
+
+renderGallery(arrayPhoto);
+
+picturesElement.addEventListener ('click', (evt) => {
+  const targetPhoto = evt.target.closest('.picture');
+
+  if (targetPhoto) {
+    const numberTargetPhoto = Number(targetPhoto.dataset.photoId);
+    const thisPhoto = arrayPhoto.find((photo) => photo.id === numberTargetPhoto);
+
+    if (thisPhoto) {
+      openModal(thisPhoto);
+    }
+  }
+});
