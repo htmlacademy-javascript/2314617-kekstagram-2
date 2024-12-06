@@ -72,8 +72,10 @@ const picturesTemplate = document.querySelector('#picture').content.querySelecto
 
 const generatePhotoElement = (filledPhoto) => {
   const photoElement = picturesTemplate.cloneNode(true);
+
   const imageElement = photoElement.querySelector('.picture__img');
 
+  photoElement.dataset.photoId = filledPhoto.id;
   imageElement.src = filledPhoto.url;
   imageElement.alt = filledPhoto.description;
   photoElement.querySelector('.picture__likes').textContent = filledPhoto.likes;
@@ -88,16 +90,25 @@ const renderGallery = (galleryPhoto) => {
   galleryPhoto.forEach((filledPhoto) => {
     const photoElement = generatePhotoElement(filledPhoto);
 
-    photoElement.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      openModal(filledPhoto);
-    });
-
     picturePhotoFragment.appendChild(photoElement);
   });
 
   picturesElement.appendChild(picturePhotoFragment);
-
 };
 
-renderGallery(createGallery(25));
+const arrayPhoto = createGallery(25);
+
+renderGallery(arrayPhoto);
+
+picturesElement.addEventListener ('click', (evt) => {
+  const targetPhoto = evt.target.closest('.picture');
+
+  if (targetPhoto) {
+    const numberTargetPhoto = Number(targetPhoto.dataset.photoId);
+    const thisPhoto = arrayPhoto.find((photo) => photo.id === numberTargetPhoto);
+
+    if (thisPhoto) {
+      openModal(thisPhoto);
+    }
+  }
+});
