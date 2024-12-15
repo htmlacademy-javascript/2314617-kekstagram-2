@@ -70,16 +70,16 @@ const createGallery = (length) =>
 const picturesElement = document.querySelector('.pictures');
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const generatePhotoElement = (filledPhoto) => {
+const generatePhotoElement = (photoData) => {
   const photoElement = picturesTemplate.cloneNode(true);
 
   const imageElement = photoElement.querySelector('.picture__img');
 
-  photoElement.dataset.photoId = filledPhoto.id;
-  imageElement.src = filledPhoto.url;
-  imageElement.alt = filledPhoto.description;
-  photoElement.querySelector('.picture__likes').textContent = filledPhoto.likes;
-  photoElement.querySelector('.picture__comments').textContent = filledPhoto.comments.length;
+  photoElement.dataset.photoId = photoData.id;
+  imageElement.src = photoData.url;
+  imageElement.alt = photoData.description;
+  photoElement.querySelector('.picture__likes').textContent = photoData.likes;
+  photoElement.querySelector('.picture__comments').textContent = photoData.comments.length;
 
   return photoElement;
 };
@@ -87,8 +87,8 @@ const generatePhotoElement = (filledPhoto) => {
 const renderGallery = (galleryPhoto) => {
   const picturePhotoFragment = document.createDocumentFragment();
 
-  galleryPhoto.forEach((filledPhoto) => {
-    const photoElement = generatePhotoElement(filledPhoto);
+  galleryPhoto.forEach((photoData) => {
+    const photoElement = generatePhotoElement(photoData);
 
     picturePhotoFragment.appendChild(photoElement);
   });
@@ -96,19 +96,19 @@ const renderGallery = (galleryPhoto) => {
   picturesElement.appendChild(picturePhotoFragment);
 };
 
-const arrayPhoto = createGallery(25);
+const photoGallery = createGallery(25);
 
-renderGallery(arrayPhoto);
+renderGallery(photoGallery);
 
 picturesElement.addEventListener ('click', (evt) => {
   const targetPhoto = evt.target.closest('.picture');
 
   if (targetPhoto) {
     const numberTargetPhoto = Number(targetPhoto.dataset.photoId);
-    const thisPhoto = arrayPhoto.find((photo) => photo.id === numberTargetPhoto);
+    const photoElement = photoGallery.find((photo) => photo.id === numberTargetPhoto);
 
-    if (thisPhoto) {
-      openModal(thisPhoto);
+    if (photoElement) {
+      openModal(photoElement);
     }
   }
 });
