@@ -33,17 +33,24 @@ const displayComments = (photoData) => {
   userComments.appendChild(commentPhotoFragment);
 };
 
-const closeBigPicture = (evt) => {
-  if (evt.key === 'Escape' || evt.target === bigPictureClosing) {
-    evt.preventDefault();
-    bigPicture.classList.add('hidden');
-    bodyElement.classList.remove('modal-open');
-    userComments.innerHTML = '';
+const closeBigPicture = () => {
+  bigPicture.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  userComments.innerHTML = '';
 
-    document.removeEventListener('click', closeBigPicture);
-    document.removeEventListener('keydown', closeBigPicture);
-  }
+  bigPictureClosing.removeEventListener('click', handleCloseClick);
+  document.removeEventListener('keydown', handleCloseKeydown);
 };
+
+function handleCloseClick () {
+  closeBigPicture();
+}
+
+function handleCloseKeydown (evt) {
+  if (evt.key === 'Escape') {
+    closeBigPicture();
+  }
+}
 
 export const openModal = (photoData) => {
   bodyElement.classList.add('modal-open');
@@ -59,6 +66,6 @@ export const openModal = (photoData) => {
 
   displayComments(photoData);
 
-  bigPictureClosing.addEventListener('click', closeBigPicture);
-  document.addEventListener('keydown', closeBigPicture);
+  bigPictureClosing.addEventListener('click', handleCloseClick);
+  document.addEventListener('keydown', handleCloseKeydown);
 };
