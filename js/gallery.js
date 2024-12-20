@@ -1,3 +1,5 @@
+import { openModal } from './big-picture';
+
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MAX_COMMENTS = 30;
@@ -49,7 +51,7 @@ const getRandomInt = (min, max) => {
 
 const createComment = (id) => ({
   id,
-  avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
+  avatar: `img/avatar-${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
   message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
   name: NAMES[getRandomInt(0, NAMES.length - 1)],
 });
@@ -68,14 +70,16 @@ const createGallery = (length) =>
 const picturesElement = document.querySelector('.pictures');
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-const generatePhotoElement = (filledPhoto) => {
+const generatePhotoElement = (photoData) => {
   const photoElement = picturesTemplate.cloneNode(true);
+
   const imageElement = photoElement.querySelector('.picture__img');
 
-  imageElement.src = filledPhoto.url;
-  imageElement.alt = filledPhoto.description;
-  photoElement.querySelector('.picture__likes').textContent = filledPhoto.likes;
-  photoElement.querySelector('.picture__comments').textContent = filledPhoto.comments.length;
+  photoElement.dataset.photoId = photoData.id;
+  imageElement.src = photoData.url;
+  imageElement.alt = photoData.description;
+  photoElement.querySelector('.picture__likes').textContent = photoData.likes;
+  photoElement.querySelector('.picture__comments').textContent = photoData.comments.length;
 
   return photoElement;
 };
@@ -83,8 +87,8 @@ const generatePhotoElement = (filledPhoto) => {
 const renderGallery = (galleryPhoto) => {
   const picturePhotoFragment = document.createDocumentFragment();
 
-  galleryPhoto.forEach((filledPhoto) => {
-    const photoElement = generatePhotoElement(filledPhoto);
+  galleryPhoto.forEach((photoData) => {
+    const photoElement = generatePhotoElement(photoData);
 
     picturePhotoFragment.appendChild(photoElement);
   });
@@ -92,4 +96,19 @@ const renderGallery = (galleryPhoto) => {
   picturesElement.appendChild(picturePhotoFragment);
 };
 
-renderGallery(createGallery(25));
+const photoGallery = createGallery(25);
+
+renderGallery(photoGallery);
+
+picturesElement.addEventListener ('click', (evt) => {
+  const galleryElement = evt.target.closest('.picture');
+
+  if (galleryElement) {
+    const photoId = Number(galleryElement.dataset.photoId);
+    const photoData = photoGallery.find((photo) => photo.id === photoId);
+
+    if (photoData) {
+      openModal(photoData);
+    }
+  }
+});
