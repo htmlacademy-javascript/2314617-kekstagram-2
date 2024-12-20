@@ -11,7 +11,7 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
-const getCommentPhoto = (comment) => {
+const createComment = (comment) => {
   const commentPhotoElement = commentsPhotoTemplate.cloneNode(true);
   const commentImageElement = commentPhotoElement.querySelector('.social__picture');
 
@@ -26,7 +26,7 @@ const displayComments = (photoData) => {
   const commentPhotoFragment = document.createDocumentFragment();
 
   photoData.comments.forEach((comment) => {
-    const commentPhotoElement = getCommentPhoto(comment);
+    const commentPhotoElement = createComment(comment);
     commentPhotoFragment.appendChild(commentPhotoElement);
   });
 

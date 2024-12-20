@@ -1,4 +1,4 @@
-import { openModal } from './fullphoto';
+import { openModal } from './big-picture';
 
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
@@ -101,14 +101,14 @@ const photoGallery = createGallery(25);
 renderGallery(photoGallery);
 
 picturesElement.addEventListener ('click', (evt) => {
-  const targetPhoto = evt.target.closest('.picture');
+  const galleryElement = evt.target.closest('.picture');
 
-  if (targetPhoto) {
-    const numberTargetPhoto = Number(targetPhoto.dataset.photoId);
-    const photoElement = photoGallery.find((photo) => photo.id === numberTargetPhoto);
+  if (galleryElement) {
+    const photoId = Number(galleryElement.dataset.photoId);
+    const photoData = photoGallery.find((photo) => photo.id === photoId);
 
-    if (photoElement) {
-      openModal(photoElement);
+    if (photoData) {
+      openModal(photoData);
     }
   }
 });
