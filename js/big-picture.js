@@ -11,6 +11,8 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
+const commentsPerPage = 5; // Переменная сохарняющие значение комментариев
+
 const createComment = (comment) => {
   const commentPhotoElement = commentsPhotoTemplate.cloneNode(true);
   const commentImageElement = commentPhotoElement.querySelector('.social__picture');
@@ -23,14 +25,34 @@ const createComment = (comment) => {
 };
 
 const displayComments = (photoData) => {
-  const commentPhotoFragment = document.createDocumentFragment();
+  let currentCommentIndex = 0; // Локальная переменная для текущего индекса
 
-  photoData.comments.forEach((comment) => {
-    const commentPhotoElement = createComment(comment);
-    commentPhotoFragment.appendChild(commentPhotoElement);
-  });
+  return () => {
+    const commentPhotoFragment = document.createDocumentFragment();
 
-  userComments.appendChild(commentPhotoFragment);
+    // Отображаем только 5 комментариев за раз
+    const commentsToShow = photoData.comments.slice(currentCommentIndex, currentCommentIndex + commentsPerPage);
+
+    commentsToShow.forEach((comment) => {
+      const commentPhotoElement = createComment(comment);
+      commentPhotoFragment.appendChild(commentPhotoElement);
+    });
+
+    userComments.appendChild(commentPhotoFragment);
+
+    // Обновляем индекс текущего комментария
+    currentCommentIndex += commentsToShow.length;
+
+    // Обновляем счётчик показанных комментариев
+    commentCount.textContent = `${currentCommentIndex} из ${photoData.comments.length} комментариев`;
+
+    // Проверяем, нужно ли скрывать кнопку "Загрузить ещё"
+    if (currentCommentIndex >= photoData.comments.length) {
+      commentsLoader.classList.add('hidden');
+    } else {
+      commentsLoader.classList.remove('hidden');
+    }
+  };
 };
 
 const closeBigPicture = () => {
@@ -52,19 +74,26 @@ function handleCloseKeydown (evt) {
   }
 }
 
+const loadMoreComments = (photoData, displayCommentsFunc) => {
+  displayCommentsFunc();
+};
+
 export const openModal = (photoData) => {
   bodyElement.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
   bigPictureImage.src = photoData.url;
   likesCount.textContent = photoData.likes;
 
-  commentsLoader.classList.add('hidden');
-  commentCount.classList.add('hidden');
+  commentsLoader.classList.remove('hidden');
+  commentCount.classList.remove('hidden');
 
   totalCommentCount.textContent = photoData.comments.length;
   authorCaption.textContent = photoData.description;
 
-  displayComments(photoData);
+  const displayCommentsFunc = displayComments(photoData); // Создаем функцию для отображения комментариев
+  displayCommentsFunc(); // Показываем первые комментарии
+
+  commentsLoader.addEventListener('click', () => loadMoreComments(photoData, displayCommentsFunc)); // Обработчик нажатия на кнопку "Загрузить ещё"
 
   bigPictureClosing.addEventListener('click', handleCloseClick);
   document.addEventListener('keydown', handleCloseKeydown);
