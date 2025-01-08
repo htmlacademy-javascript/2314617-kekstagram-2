@@ -11,7 +11,9 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
+let dataComments = [];
 const commentsPerPage = 5; // Переменная сохарняющие значение комментариев
+let currentComment = 0; // Локальная переменная для текущего индекса
 
 const createComment = (comment) => {
   const commentPhotoElement = commentsPhotoTemplate.cloneNode(true);
@@ -24,44 +26,42 @@ const createComment = (comment) => {
   return commentPhotoElement;
 };
 
-const displayComments = (photoData) => {
-  let currentCommentIndex = 0; // Локальная переменная для текущего индекса
+const displayComments = () => {
+  const commentPhotoFragment = document.createDocumentFragment();
 
-  return () => {
-    const commentPhotoFragment = document.createDocumentFragment();
+  // Отображаем только 5 комментариев за раз
+  const commentsToShow = dataComments.slice(currentComment, currentComment + commentsPerPage);
 
-    // Отображаем только 5 комментариев за раз
-    const commentsToShow = photoData.comments.slice(currentCommentIndex, currentCommentIndex + commentsPerPage);
+  commentsToShow.forEach((comment) => {
+    const commentPhotoElement = createComment(comment);
+    commentPhotoFragment.append(commentPhotoElement);
+  });
 
-    commentsToShow.forEach((comment) => {
-      const commentPhotoElement = createComment(comment);
-      commentPhotoFragment.appendChild(commentPhotoElement);
-    });
+  userComments.append(commentPhotoFragment);
 
-    userComments.appendChild(commentPhotoFragment);
+  // Обновляем индекс текущего комментария
+  currentComment += commentsToShow.length;
 
-    // Обновляем индекс текущего комментария
-    currentCommentIndex += commentsToShow.length;
+  // Обновляем счётчик показанных комментариев
+  commentCount.textContent = `${currentComment} из ${dataComments.length} комментариев`;
 
-    // Обновляем счётчик показанных комментариев
-    commentCount.textContent = `${currentCommentIndex} из ${photoData.comments.length} комментариев`;
-
-    // Проверяем, нужно ли скрывать кнопку "Загрузить ещё"
-    if (currentCommentIndex >= photoData.comments.length) {
-      commentsLoader.classList.add('hidden');
-    } else {
-      commentsLoader.classList.remove('hidden');
-    }
-  };
+  // Проверяем, нужно ли скрывать кнопку "Загрузить ещё"
+  if (currentComment >= dataComments.length) {
+    commentsLoader.classList.add('hidden');
+  }
 };
 
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   userComments.innerHTML = '';
+  userComments.innerHTML = '';
+  currentComment = 0;
 
   bigPictureClosing.removeEventListener('click', handleCloseClick);
   document.removeEventListener('keydown', handleCloseKeydown);
+  commentsLoader.removeEventListener('click', displayComments);
+  document.removeEventListener('keydown', displayComments);
 };
 
 function handleCloseClick () {
@@ -74,11 +74,9 @@ function handleCloseKeydown (evt) {
   }
 }
 
-const loadMoreComments = (photoData, displayCommentsFunc) => {
-  displayCommentsFunc();
-};
-
 export const openModal = (photoData) => {
+  dataComments = photoData.comments;
+
   bodyElement.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
   bigPictureImage.src = photoData.url;
@@ -90,11 +88,9 @@ export const openModal = (photoData) => {
   totalCommentCount.textContent = photoData.comments.length;
   authorCaption.textContent = photoData.description;
 
-  const displayCommentsFunc = displayComments(photoData); // Создаем функцию для отображения комментариев
-  displayCommentsFunc(); // Показываем первые комментарии
-
-  commentsLoader.addEventListener('click', () => loadMoreComments(photoData, displayCommentsFunc)); // Обработчик нажатия на кнопку "Загрузить ещё"
+  commentsLoader.addEventListener('click', displayComments); // Обработчик нажатия на кнопку "Загрузить ещё"
 
   bigPictureClosing.addEventListener('click', handleCloseClick);
   document.addEventListener('keydown', handleCloseKeydown);
+  displayComments(photoData);
 };
