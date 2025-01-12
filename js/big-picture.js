@@ -4,6 +4,7 @@ const bigPictureImage = bigPicture.querySelector('.big-picture__img').querySelec
 const likesCount = bigPicture.querySelector('.likes-count');
 const commentCount = bigPicture.querySelector('.social__comment-count');
 const totalCommentCount = bigPicture.querySelector('.social__comment-total-count');
+const shownCommentCount = bigPicture.querySelector('.social__comment-shown-count');
 const userComments = bigPicture.querySelector('.social__comments');
 const authorCaption = bigPicture.querySelector('.social__caption');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
@@ -12,8 +13,8 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
 let dataComments = [];
-const commentsPerPage = 5; // Переменная сохарняющие значение комментариев
-let currentComment = 0; // Локальная переменная для текущего индекса
+const displayedCommentsCount = 5;
+let currentComment = 0;
 
 const createComment = (comment) => {
   const commentPhotoElement = commentsPhotoTemplate.cloneNode(true);
@@ -28,9 +29,7 @@ const createComment = (comment) => {
 
 const displayComments = () => {
   const commentPhotoFragment = document.createDocumentFragment();
-
-  // Отображаем только 5 комментариев за раз
-  const commentsToShow = dataComments.slice(currentComment, currentComment + commentsPerPage);
+  const commentsToShow = dataComments.slice(currentComment, currentComment + displayedCommentsCount);
 
   commentsToShow.forEach((comment) => {
     const commentPhotoElement = createComment(comment);
@@ -39,13 +38,9 @@ const displayComments = () => {
 
   userComments.append(commentPhotoFragment);
 
-  // Обновляем индекс текущего комментария
   currentComment += commentsToShow.length;
+  shownCommentCount.textContent = currentComment;
 
-  // Обновляем счётчик показанных комментариев
-  commentCount.textContent = `${currentComment} из ${dataComments.length} комментариев`;
-
-  // Проверяем, нужно ли скрывать кнопку "Загрузить ещё"
   if (currentComment >= dataComments.length) {
     commentsLoader.classList.add('hidden');
   }
@@ -54,7 +49,6 @@ const displayComments = () => {
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
-  userComments.innerHTML = '';
   userComments.innerHTML = '';
   currentComment = 0;
 
@@ -88,7 +82,7 @@ export const openModal = (photoData) => {
   totalCommentCount.textContent = photoData.comments.length;
   authorCaption.textContent = photoData.description;
 
-  commentsLoader.addEventListener('click', displayComments); // Обработчик нажатия на кнопку "Загрузить ещё"
+  commentsLoader.addEventListener('click', displayComments);
 
   bigPictureClosing.addEventListener('click', handleCloseClick);
   document.addEventListener('keydown', handleCloseKeydown);
