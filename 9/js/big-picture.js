@@ -12,9 +12,9 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
-let dataComments = [];
-const displayedCommentsCount = 5;
-let currentComment = 0;
+let photoComments = [];
+const DISPLAYED_COMMENTS_COUNT = 5;
+let currentVisibleComment = 0;
 
 const createComment = (comment) => {
   const commentPhotoElement = commentsPhotoTemplate.cloneNode(true);
@@ -29,7 +29,7 @@ const createComment = (comment) => {
 
 const displayComments = () => {
   const commentPhotoFragment = document.createDocumentFragment();
-  const commentsToShow = dataComments.slice(currentComment, currentComment + displayedCommentsCount);
+  const commentsToShow = photoComments.slice(currentVisibleComment, currentVisibleComment + DISPLAYED_COMMENTS_COUNT);
 
   commentsToShow.forEach((comment) => {
     const commentPhotoElement = createComment(comment);
@@ -38,10 +38,10 @@ const displayComments = () => {
 
   userComments.append(commentPhotoFragment);
 
-  currentComment += commentsToShow.length;
-  shownCommentCount.textContent = currentComment;
+  currentVisibleComment += commentsToShow.length;
+  shownCommentCount.textContent = currentVisibleComment;
 
-  if (currentComment >= dataComments.length) {
+  if (currentVisibleComment >= photoComments.length) {
     commentsLoader.classList.add('hidden');
   }
 };
@@ -50,7 +50,7 @@ const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   userComments.innerHTML = '';
-  currentComment = 0;
+  currentVisibleComment = 0;
 
   bigPictureClosing.removeEventListener('click', handleCloseClick);
   document.removeEventListener('keydown', handleCloseKeydown);
@@ -69,7 +69,7 @@ function handleCloseKeydown (evt) {
 }
 
 export const openModal = (photoData) => {
-  dataComments = photoData.comments;
+  photoComments = photoData.comments;
 
   bodyElement.classList.add('modal-open');
   bigPicture.classList.remove('hidden');
