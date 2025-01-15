@@ -1,4 +1,4 @@
-import { openModal } from './big-picture';
+import { openModal } from './big-picture.js';
 
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
