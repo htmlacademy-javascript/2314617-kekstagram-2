@@ -1,3 +1,5 @@
+const DISPLAYED_COMMENTS_COUNT = 5;
+
 const bodyElement = document.body;
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImage = bigPicture.querySelector('.big-picture__img').querySelector('img');
@@ -13,7 +15,6 @@ const bigPictureClosing = bigPicture.querySelector('.big-picture__cancel');
 const commentsPhotoTemplate = document.querySelector('#comments').content.querySelector('.social__comment');
 
 let photoComments = [];
-const DISPLAYED_COMMENTS_COUNT = 5;
 let currentVisibleComment = 0;
 
 const createComment = (comment) => {
@@ -48,8 +49,12 @@ const displayComments = () => {
 
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
+  commentsLoader.classList.add('hidden');
+  commentCount.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   userComments.innerHTML = '';
+  shownCommentCount.innerHTML = '';
+  totalCommentCount.innerHTML = '';
   currentVisibleComment = 0;
 
   bigPictureClosing.removeEventListener('click', handleCloseClick);
