@@ -4,6 +4,7 @@ const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadCancel = document.querySelector('.img-upload__cancel');
 const uploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
+const textDescription = document.querySelector('.text__description');
 
 uploadInput.addEventListener('change', (evt) => {
   evt.preventDefault();
@@ -29,6 +30,18 @@ function handleCloseKeydown (evt) {
     closeUploadInput();
   }
 }
+
+textHashtags.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape') {
+    evt.stopPropagation();
+  }
+});
+
+textDescription.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape') {
+    evt.stopPropagation();
+  }
+});
 
 const pristineForm = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
