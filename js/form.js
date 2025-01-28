@@ -12,22 +12,22 @@ uploadInput.addEventListener('change', (evt) => {
   bodyElement.classList.add('modal-open');
   uploadInput.value = '';
 
-  uploadCancel.addEventListener('click', handleCloseClick);
-  document.addEventListener('keydown', handleCloseKeydown);
+  uploadCancel.addEventListener('click', onUploadFormClick);
+  document.addEventListener('keydown', onUploadFormKeydown);
 });
 
-const closeUploadInput = () => {
+const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
 };
 
-function handleCloseClick () {
-  closeUploadInput();
+function onUploadFormClick () {
+  closeUploadForm();
 }
 
-function handleCloseKeydown (evt) {
+function onUploadFormKeydown (evt) {
   if (evt.key === 'Escape') {
-    closeUploadInput();
+    closeUploadForm();
   }
 }
 
