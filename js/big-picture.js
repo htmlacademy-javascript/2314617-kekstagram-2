@@ -47,9 +47,9 @@ const displayComments = () => {
   }
 };
 
-function onCommentsLoaderClick () {
+const onCommentsLoaderClick = () => {
   displayComments();
-}
+};
 
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');

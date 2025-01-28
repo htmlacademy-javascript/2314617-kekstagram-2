@@ -6,6 +6,21 @@ const uploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 
+const closeUploadForm = () => {
+  uploadOverlay.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+};
+
+const onUploadFormClick = () => {
+  closeUploadForm();
+};
+
+const onUploadFormKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    closeUploadForm();
+  }
+};
+
 uploadInput.addEventListener('change', (evt) => {
   evt.preventDefault();
   uploadOverlay.classList.remove('hidden');
@@ -15,21 +30,6 @@ uploadInput.addEventListener('change', (evt) => {
   uploadCancel.addEventListener('click', onUploadFormClick);
   document.addEventListener('keydown', onUploadFormKeydown);
 });
-
-const closeUploadForm = () => {
-  uploadOverlay.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-};
-
-function onUploadFormClick () {
-  closeUploadForm();
-}
-
-function onUploadFormKeydown (evt) {
-  if (evt.key === 'Escape') {
-    closeUploadForm();
-  }
-}
 
 textHashtags.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape') {
