@@ -1,4 +1,5 @@
 const MAX_COMMENTS_LENGTH = 140;
+const TAGS_INVALID = 'Хэштеги не верные';
 
 const bodyElement = document.body;
 const uploadInput = document.querySelector('.img-upload__input');
@@ -45,49 +46,46 @@ const pristineForm = new Pristine(uploadForm, {
   errorTextClass:'.img-upload__field-wrapper--error',
 });
 
-pristineForm.addValidator(textDescription, (value) => {
+const checkUniqueHashtags = (hashtagList) => {
+
+  const uniqueHastags = new Set(hashtagList);
+
+  if (uniqueHastags.size !== hashtagList.length) {
+    return false;
+  }
+
+  return true;
+};
+
+const checkCountHashtags = (hashtagList) => {
+  if (hashtagList.length > 5) {
+    return false;
+  }
+
+  return true;
+};
+
+const checkValidHashtags = (hashtagList) => {
+  const hashtagsCountRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
+
+  return hashtagList.every((tag) => hashtagsCountRegExp.test(tag));
+};
+
+const getDatasHashtags = (value) => value.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
+
+const validateHashtags = (value) => {
+  const datasHashtags = getDatasHashtags(value);
+  return checkUniqueHashtags(datasHashtags) && checkCountHashtags(datasHashtags) && checkValidHashtags(datasHashtags);
+};
+
+const validateDescription = (value) => {
   if (value.length > MAX_COMMENTS_LENGTH) {
     return false;
   }
-  return true;
-}, 'Максимальная длина 140 символов', 1, true);
-
-pristineForm.addValidator(textHashtags, (value) => {
-  const hashtagsCountRegExp = /^(#[a-zа-яё0-9]{1,19}(\s+|\s*$)){1,5}$/i;
-
-  return hashtagsCountRegExp.test(value);
-}, 'Превышено количество хэштегов', 2, true);
-
-pristineForm.addValidator(textHashtags, (value) => {
-  const hashtagsCountRegExp = /^(#[a-zа-яё0-9]{1,19}(\s+|\s*$)){1,}$/i;
-
-  return hashtagsCountRegExp.test(value);
-}, 'Введён невалидный хэштег', 3, true);
-
-pristineForm.addValidator(textHashtags, (value) => {
-  const hashtags = value
-    .toLowerCase()
-    .split(' ')
-    .filter((tag) => tag.trim() !== '');
-
-  const uniqueHastags = new Set(hashtags);
-
-  if (uniqueHastags.size !== hashtags.length) {
-    return false;
-  }
 
   return true;
-}, 'Хэштеги повторяются', 1, true);
+};
 
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+pristineForm.addValidator(textHashtags, validateHashtags, TAGS_INVALID);
 
-  const isValidForm = pristineForm.validate();
-
-  if (isValidForm) {
-    //Код в случае валидности
-  } else {
-    //Код в случае невалидности
-  }
-});
-
+pristineForm.addValidator(textDescription, validateDescription, 'Максимальная длина 140 символов');
