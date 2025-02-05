@@ -1,5 +1,8 @@
 const MAX_COMMENTS_LENGTH = 140;
+
 const TAGS_INVALID = 'Хэштеги не верные';
+
+const HASHTAGS_COUNT_REG_EXP = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const bodyElement = document.body;
 const uploadInput = document.querySelector('.img-upload__input');
@@ -9,11 +12,11 @@ const uploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 
-const formFields = [textHashtags, textDescription].filter((field) => field !== null);
+const FORM_FIELDS = [textHashtags, textDescription];
 
-const isFormFieldActive = () => formFields.some((field) => field === document.activeElement);
+const isFormFieldActive = () => FORM_FIELDS.some((field) => field === document.activeElement);
 
-const checkKeydown = (key) => key === 'Escape';
+const isEscapeKey = (key) => key === 'Escape';
 
 const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
@@ -25,7 +28,7 @@ const onUploadFormClick = () => {
 };
 
 const onUploadFormKeydown = (evt) => {
-  if (checkKeydown(evt.key) && !isFormFieldActive()) {
+  if (isEscapeKey(evt.key) && !isFormFieldActive()) {
     closeUploadForm();
   }
 };
@@ -46,18 +49,13 @@ const pristineForm = new Pristine(uploadForm, {
   errorTextClass:'.img-upload__field-wrapper--error',
 });
 
-const checkUniqueHashtags = (hashtagList) => {
-
+const isHashtagUnique = (hashtagList) => {
   const uniqueHastags = new Set(hashtagList);
 
-  if (uniqueHastags.size !== hashtagList.length) {
-    return false;
-  }
-
-  return true;
+  return uniqueHastags.size === hashtagList.length;
 };
 
-const checkCountHashtags = (hashtagList) => {
+const isHashtagsCountValid = (hashtagList) => {
   if (hashtagList.length > 5) {
     return false;
   }
@@ -65,27 +63,15 @@ const checkCountHashtags = (hashtagList) => {
   return true;
 };
 
-const checkValidHashtags = (hashtagList) => {
-  const hashtagsCountRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
+const isHashtagValid = (hashtagList) => hashtagList.every((tag) => HASHTAGS_COUNT_REG_EXP.test(tag));
 
-  return hashtagList.every((tag) => hashtagsCountRegExp.test(tag));
+const isHashtagsValid = (value) => {
+  const datasHashtags = value.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
+
+  return isHashtagUnique(datasHashtags) && isHashtagsCountValid(datasHashtags) && isHashtagValid(datasHashtags);
 };
 
-const getDatasHashtags = (value) => value.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
+const isDecriptionValid = (value) => value.length < MAX_COMMENTS_LENGTH;
 
-const validateHashtags = (value) => {
-  const datasHashtags = getDatasHashtags(value);
-  return checkUniqueHashtags(datasHashtags) && checkCountHashtags(datasHashtags) && checkValidHashtags(datasHashtags);
-};
-
-const validateDescription = (value) => {
-  if (value.length > MAX_COMMENTS_LENGTH) {
-    return false;
-  }
-
-  return true;
-};
-
-pristineForm.addValidator(textHashtags, validateHashtags, TAGS_INVALID);
-
-pristineForm.addValidator(textDescription, validateDescription, 'Максимальная длина 140 символов');
+pristineForm.addValidator(textHashtags, isHashtagsValid, TAGS_INVALID);
+pristineForm.addValidator(textDescription, isDecriptionValid, 'Максимальная длина 140 символов');
