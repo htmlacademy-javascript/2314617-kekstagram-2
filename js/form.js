@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 const MAX_COMMENTS_LENGTH = 140;
 
 const TAGS_INVALID = 'Хэштеги не верные';
@@ -15,8 +17,6 @@ const textDescription = document.querySelector('.text__description');
 const FORM_FIELDS = [textHashtags, textDescription];
 
 const isFormFieldActive = () => FORM_FIELDS.some((field) => field === document.activeElement);
-
-const isEscapeKey = (key) => key === 'Escape';
 
 const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
