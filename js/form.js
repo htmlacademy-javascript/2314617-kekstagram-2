@@ -1,10 +1,10 @@
 import { isEscapeKey } from './util.js';
 
 const MAX_COMMENTS_LENGTH = 140;
-
+const MAX_HASHTAGS_AMOUNT = 5;
 const TAGS_INVALID = 'Хэштеги не верные';
-
-const HASHTAGS_COUNT_REG_EXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const COMMENTS_INVALID = 'Максимальная длина 140 символов';
+const HASHTAGS_REG_EXP = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const bodyElement = document.body;
 const uploadInput = document.querySelector('.img-upload__input');
@@ -14,16 +14,16 @@ const uploadForm = document.querySelector('.img-upload__form');
 const textHashtags = document.querySelector('.text__hashtags');
 const textDescription = document.querySelector('.text__description');
 
-const FORM_FIELDS = [textHashtags, textDescription];
+const formFields = [textHashtags, textDescription];
 
-const isFormFieldActive = () => FORM_FIELDS.some((field) => field === document.activeElement);
+const isFormFieldActive = () => formFields.some((field) => field === document.activeElement);
 
 const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
 };
 
-const onUploadFormClick = () => {
+const onCancelClick = () => {
   closeUploadForm();
 };
 
@@ -39,7 +39,7 @@ uploadInput.addEventListener('change', (evt) => {
   bodyElement.classList.add('modal-open');
   uploadInput.value = '';
 
-  uploadCancel.addEventListener('click', onUploadFormClick);
+  uploadCancel.addEventListener('click', onCancelClick);
   document.addEventListener('keydown', onUploadFormKeydown);
 });
 
@@ -55,15 +55,9 @@ const isHashtagUnique = (hashtagList) => {
   return uniqueHastags.size === hashtagList.length;
 };
 
-const isHashtagsCountValid = (hashtagList) => {
-  if (hashtagList.length > 5) {
-    return false;
-  }
+const isHashtagsCountValid = (hashtagList) => hashtagList.length <= MAX_HASHTAGS_AMOUNT;
 
-  return true;
-};
-
-const isHashtagValid = (hashtagList) => hashtagList.every((tag) => HASHTAGS_COUNT_REG_EXP.test(tag));
+const isHashtagValid = (hashtagList) => hashtagList.every((tag) => HASHTAGS_REG_EXP.test(tag));
 
 const isHashtagsValid = (value) => {
   const datasHashtags = value.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
@@ -74,4 +68,4 @@ const isHashtagsValid = (value) => {
 const isDecriptionValid = (value) => value.length < MAX_COMMENTS_LENGTH;
 
 pristineForm.addValidator(textHashtags, isHashtagsValid, TAGS_INVALID);
-pristineForm.addValidator(textDescription, isDecriptionValid, 'Максимальная длина 140 символов');
+pristineForm.addValidator(textDescription, isDecriptionValid, COMMENTS_INVALID);

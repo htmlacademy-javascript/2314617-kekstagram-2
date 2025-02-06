@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 const DISPLAYED_COMMENTS_COUNT = 5;
 
 const bodyElement = document.body;
@@ -66,12 +68,12 @@ const closeBigPicture = () => {
   commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 };
 
-function onBigPictureClick () {
+function onBigPictureClick() {
   closeBigPicture();
 }
 
-function onBigPictureKeydown (evt) {
-  if (evt.key === 'Escape') {
+function onBigPictureKeydown(evt) {
+  if (isEscapeKey(evt.key)) {
     closeBigPicture();
   }
 }
